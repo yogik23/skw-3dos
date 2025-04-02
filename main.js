@@ -14,6 +14,10 @@ const getRandomUserAgent = () => {
     return userAgents[Math.floor(Math.random() * userAgents.length)];
 };
 
+const spinner = ora({
+  color: "cyan",
+});
+
 async function spinnerCD(seconds) {
     const spinner = ora().start();
 
@@ -25,7 +29,7 @@ async function spinnerCD(seconds) {
                 spinner.succeed();
                 resolve();
             } else {
-                spinner.text = `${countdown} detik...`;
+                spinner.text = chalk.cyan(`${countdown} detik...`);
                 countdown--;
             }
         }, 1000);
@@ -113,6 +117,7 @@ async function startBot() {
         outputTable.clearTable();
 
         for (const line of apiSecretsAndTokens) {
+            spinner.start();
             const [apiSecret, bearerToken] = line.split(':').map(item => item.trim());
             if (!apiSecret || !bearerToken) {
                 continue;
@@ -124,6 +129,7 @@ async function startBot() {
             await delay(1000);
             const { earnings, status } = await ping(apiSecret, bearerToken);
             await delay(1000);
+            spinner.succeed();
 
             outputTable.updateRow(email, dailyClaimStatus, earnings, status);
             outputTable.printTable();
@@ -131,6 +137,7 @@ async function startBot() {
         }
 
     } catch (error) {
+        spinner.fail();
         console.error('Error:', error.message);
     }
 }
