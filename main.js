@@ -98,8 +98,7 @@ async function ping(apiSecret, bearerToken) {
     }
 }
 
-
-async function main() {
+async function startBot() {
     console.clear();
     try {
         const apiSecretsAndTokens = fs.readFileSync(API_dan_Bearer, 'utf8')
@@ -110,8 +109,8 @@ async function main() {
         if (apiSecretsAndTokens.length === 0) {
             return;
         }
-      
-        console.clear();
+
+        outputTable.clearTable();
 
         for (const line of apiSecretsAndTokens) {
             const [apiSecret, bearerToken] = line.split(':').map(item => item.trim());
@@ -120,21 +119,30 @@ async function main() {
             }
 
             const email = await getprofile(bearerToken);
-            outputTable.updateRow(email, 'email', email);
             await delay(1000);
-
             const dailyClaimStatus = await daily(bearerToken);
-            outputTable.updateRow(email, 'dailyClaim', dailyClaimStatus);
+            await delay(1000);
+            const { earnings, status } = await ping(apiSecret, bearerToken);
             await delay(1000);
 
-            const { earnings, status } = await ping(apiSecret, bearerToken);
-            outputTable.updateRow(email, 'earnings', earnings);
-            outputTable.updateRow(email, 'pingStatus', status);
-            await delay(1000);
+            outputTable.updateRow(email, dailyClaimStatus, earnings, status);
+            outputTable.printTable();
+
         }
-    await spinnerCD(10);
+
     } catch (error) {
         console.error('Error:', error.message);
+    }
+}
+
+async function main() {
+    try {
+        while (true) {
+            await startBot();
+            await spinnerCD(30);
+        }
+    } catch (error) {
+        console.error('Error in main loop:', error.message);
     }
 }
 
