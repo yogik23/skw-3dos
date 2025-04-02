@@ -2,6 +2,7 @@ const axios = require('axios');
 const fs = require('fs');
 const chalk = require('chalk').default;
 const Table = require('cli-table3');
+const ora = require('ora');
 const userAgents = require('./skw/userAgents');
 const Output = require('./skw/Output');
 const outputTable = new Output();
@@ -12,6 +13,24 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const getRandomUserAgent = () => {
     return userAgents[Math.floor(Math.random() * userAgents.length)];
 };
+
+async function spinnerCD(seconds) {
+    const spinner = ora().start();
+
+    return new Promise((resolve) => {
+        let countdown = seconds;
+        const countdownInterval = setInterval(() => {
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                spinner.succeed();
+                resolve();
+            } else {
+                spinner.text = `${countdown} detik...`;
+                countdown--;
+            }
+        }, 1000);
+    });
+}
 
 async function getprofile(bearerToken) {
     const url = `https://api.dashboard.3dos.io/api/profile/me`;
@@ -114,7 +133,7 @@ async function main() {
             outputTable.updateRow(email, 'pingStatus', status);
             await delay(1000);
         }
-
+    await spinnerCD(10);
     } catch (error) {
         console.error('Error:', error.message);
     }
