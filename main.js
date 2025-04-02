@@ -71,7 +71,6 @@ async function daily(bearerToken) {
         }
 
     } catch (error) {
-        console.error(chalk.red("Error during daily claim:"), error.response?.data || error.message);
         return 'Sudah Claim';
     }
 }
