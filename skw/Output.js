@@ -5,12 +5,12 @@ class Output {
     constructor() {
         this.table = new Table({
             head: [
-                chalk.hex('#C0C0C0')('Status Klaim'),
-                chalk.hex('#C0C0C0')('Email'),
-                chalk.hex('#C0C0C0')('Earnings'),
-                chalk.hex('#C0C0C0')('Ping Status')
+                chalk.hex('#00CED1')('Email'),
+                chalk.hex('#00CED1')('Daily Klaim'),
+                chalk.hex('#00CED1')('Today Earnings'),
+                chalk.hex('#00CED1')('Ping Status')
             ],
-            colWidths: [15, 30, 15, 15],
+            colWidths: [30, 15, 20, 15],
             style: {
                 head: ['cyan'],
                 border: ['gray'],
@@ -25,17 +25,17 @@ class Output {
 
         if (rowIndex !== -1) {
             this.table[rowIndex] = [
-                statusClaim === 'Sukses' ? chalk.green('✔ Sukses') : chalk.red('❌ Gagal'),
                 chalk.hex('#00FFFF')(email),
-                chalk.hex('#F0E68C')(earnings),
-                chalk.hex('#DC143C')(pingStatus)
+                statusClaim === 'Sukses' ? chalk.hex('#00FFFF')('✔ Sukses') : chalk.hex('#00FFFF')('Sudah Claim'),
+                chalk.hex('#00FFFF')(earnings),
+                chalk.hex('#00FFFF')(pingStatus)
             ];
         } else {
             this.table.push([
-                statusClaim === 'Sukses' ? chalk.green('✔ Sukses') : chalk.red('❌ Gagal'),
                 chalk.hex('#00FFFF')(email),
-                chalk.hex('#F0E68C')(earnings),
-                chalk.hex('#DC143C')(pingStatus)
+                statusClaim === 'Sukses' ? chalk.hex('#00FFFF')('✔ Sukses') : chalk.hex('#00FFFF')('Sudah Claim'),
+                chalk.hex('#00FFFF')(earnings),
+                chalk.hex('#00FFFF')(pingStatus)
             ]);
         }
     }
