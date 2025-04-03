@@ -5,6 +5,7 @@ const Table = require('cli-table3');
 const ora = require('ora');
 const userAgents = require('./skw/userAgents');
 const Output = require('./skw/Output');
+const { displayskw } = require('./skw/displayskw');
 const outputTable = new Output();
 
 const API_dan_Bearer = 'data.txt';
@@ -143,6 +144,9 @@ async function startBot() {
 }
 
 async function main() {
+    console.clear();
+    displayskw();
+    await delay(2000);
     try {
         while (true) {
             await startBot();
